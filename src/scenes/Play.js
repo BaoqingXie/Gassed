@@ -8,6 +8,9 @@ class Play extends Phaser.Scene {
     }
 
     create() {
+        this.hp = new HealthBar(this, 100, 100);
+        this.hp.decrease(10);
+        this.hp.increase(10);
 
     }
 
