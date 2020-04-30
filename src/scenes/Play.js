@@ -5,15 +5,69 @@ class Play extends Phaser.Scene {
 
     preload() {
         this.load.path = './assets/';
-        this.load.image('player1','guy.png');
         this.load.image('floor','floor.png');
+
+        // bgcolor line should be replaced with loading bg image
+        this.cameras.main.setBackgroundColor('#FACADE') // just so i can see the character
+
+        //this.load.image('player1','guy.png');
+        this.load.atlas('player1', 'player1.png', 'player1.json');
     }
 
     create(){
+        //creating anims using the atlas
+        this.anims.create({
+            key: 'run',
+            frames: this.anims.generateFrameNames('player1', {
+                start: 0,
+                end: 4,
+                zeroPad: 2,
+                prefix: 'run',
+            }),
+            frameRate: 15,
+            repeat: -1
+        });
+        // cycles through the entire fart animation (tap spacebar?)
+        this.anims.create({
+            key: 'full-fart',
+            frames: this.anims.generateFrameNames('player1', {
+                start: 0,
+                end: 9,
+                zeroPad: 2,
+                prefix: 'fart',
+            }),
+            frameRate: 8,
+            repeat: 0
+        });
+        // looping 2 frames while in the air (while holding spacebar?)
+        this.anims.create({
+            key: 'fart',
+            frames: this.anims.generateFrameNames('player1', {
+                start: 4,
+                end: 5,
+                zeroPad: 2,
+                prefix: 'fart',
+            }),
+            frameRate: 8,
+            repeat: -1
+        });
+        // death animation
+        this.anims.create({
+            key: 'death',
+            frames: this.anims.generateFrameNames('player1', {
+                start: 0,
+                end: 7,
+                zeroPad: 2,
+                prefix: 'death',
+            }),
+            frameRate: 8,
+            repeat: 0
+        });
 
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
         this.player1 = this.physics.add.sprite(centerX,centerY,'player1');
+        this.player1.play('run'); // default run animation
         this.player1.setGravityY(500);
 
         this.floor = this.physics.add.sprite(centerX,this.game.config.height*0.90,'floor');
