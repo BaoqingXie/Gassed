@@ -80,15 +80,36 @@ class Play extends Phaser.Scene {
 
 
 
+<<<<<<< Updated upstream
         this.grounded = false;
         this.justJumped = false;
+=======
+
+>>>>>>> Stashed changes
 
     }
 
     update() {
 
+<<<<<<< Updated upstream
         
         this.background.tilePositionX += 4;  // scroll tile sprite
+=======
+
+        if (this.player1.y + this.player1.height >= this.floor.y - 1 && this.grounded == false) {
+<<<<<<< HEAD
+=======
+
+        //Background scrolling
+
+  
+
+>>>>>>> 1375826395ff668f030e93ce3814cd5e1f79f3de
+            this.grounded = true;
+            if (!this.justJumped)
+                this.player1.play('run'); // when grounded/not jumping, play run animation
+        }
+>>>>>>> Stashed changes
 
         if (this.player1.y + this.player1.height >= this.floor.y - 1 && this.grounded == false)
             this.grounded = true;
