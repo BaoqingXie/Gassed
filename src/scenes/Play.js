@@ -110,11 +110,11 @@ class Play extends Phaser.Scene {
         this.hp = new HealthBar(this, 20, 20);
 
         //add items
-        this.banana = this.physics.add.sprite(centerX, centerY - 200, 'Banana');
+        this.banana = this.physics.add.sprite(this.getRandomArbitrary(800, 1000), this.getRandomArbitrary(200, 100), 'Banana');
         this.banana.body.setSize(10, 10)
         this.banana.body.setImmovable(true);
 
-        this.burrito = this.physics.add.sprite(centerX, centerY - 100, 'Burrito');
+        this.burrito = this.physics.add.sprite(this.getRandomArbitrary(800, 1000), this.getRandomArbitrary(200, 400), 'Burrito');
         this.burrito.body.setSize(10, 10)
         this.burrito.body.setImmovable(true);
 
@@ -161,25 +161,46 @@ class Play extends Phaser.Scene {
             }
         }
 
+        //item moving
+        this.burrito.setVelocity(-100, 0);
+        this.banana.setVelocity(-100, 0);
+
         this.physics.overlap(this.player1, this.burrito, this.increase, null, this);
         this.physics.overlap(this.player1, this.banana, this.decrease, null, this);
 
+        if(this.burrito.x < 0){
+            this.burrito.setX(this.getRandomArbitrary(800, 1000));
+            this.burrito.setY(this.getRandomArbitrary(200, 400));
+        }
+
+        if(this.banana.x < 0){
+            this.banana.setX(this.getRandomArbitrary(800, 1000));
+            this.banana.setY(this.getRandomArbitrary(200, 100));
+        }
+
     }
     increase() {
-        this.burrito.destroy(true);
+        this.burrito.destroy();
         this.hp.increase(20);
         console.log('increase');
+        this.burrito = this.physics.add.sprite(this.getRandomArbitrary(800, 1000), this.getRandomArbitrary(200, 400), 'Burrito');
     }
 
     decrease() {
-        this.banana.destroy(true);
+        this.banana.destroy();
         this.hp.decrease(20);
         console.log('decrease');
+        this.banana = this.physics.add.sprite(this.getRandomArbitrary(800, 1000), this.getRandomArbitrary(200, 100), 'Banana');
+        
     }
 
     printTime() {
         console.log(this.time);
         this.text.setText('Score: ' + this.time);
         this.time += 1;
+    }
+
+    getRandomArbitrary(min, max) {
+        return Math.random() * (max - min) + min;
     }
 }
