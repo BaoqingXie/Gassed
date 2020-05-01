@@ -110,7 +110,8 @@ class Play extends Phaser.Scene {
 
         if (Phaser.Input.Keyboard.JustDown(keySPACE) && this.grounded){
             this.justJumped = true;
-            this.player1.play('jump-fart');
+            this.player1.anims.stop();
+            this.player1.setFrame('fart09');
             console.log('jump');
             this.player1.setVelocity(0,-400);
             this.grounded = false;
