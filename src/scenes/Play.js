@@ -8,10 +8,11 @@ class Play extends Phaser.Scene {
         this.load.atlas('player1', 'player1.png', 'player1.json');
         this.load.image('floor', 'floor.png');
         this.load.image('fuelbar', 'fuelbar.png');
+        this.load.image('Burrito', 'Burrito.png');
+        this.load.image('Banana', 'Banana.png');
 
         // can replace with bg asset
         this.cameras.main.setBackgroundColor('#FACADE') // just so i can see the character
-
 
     }
 

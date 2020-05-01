@@ -55,7 +55,7 @@ class HealthBar {
             this.bar.fillStyle(0x00ff00);
         }
 
-        this.bar.fillRect(this.x + 2, this.y + 2, this.value, 12);
+        this.bar.fillRect(this.x + 2, this.y + 2, this.value-4, 12);
     }
 
 }
