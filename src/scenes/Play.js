@@ -6,6 +6,7 @@ class Play extends Phaser.Scene {
     preload() {
         this.load.path = './assets/';
         this.load.atlas('player1', 'player1.png', 'player1.json');
+
         this.load.image('floor', 'floor.png');
         this.load.image('fuelbar', 'fuelbar.png');
         this.load.image('Burrito', 'Burrito.png');
@@ -17,6 +18,7 @@ class Play extends Phaser.Scene {
     }
 
     create() {
+
         //creating anims using the atlas - can tinker with
         this.anims.create({
             key: 'run', // default running animation
@@ -78,6 +80,7 @@ class Play extends Phaser.Scene {
             repeat: 0
         });
 
+
         //timer for the game score
         timerEvent = this.time.addEvent({
             delay: 600,                // ms
@@ -124,6 +127,7 @@ class Play extends Phaser.Scene {
     }
 
     update() {
+
         if (this.player1.y + this.player1.height >= this.floor.y - 1 && this.grounded == false) {
             this.grounded = true;
             if (!this.justJumped)
@@ -134,6 +138,7 @@ class Play extends Phaser.Scene {
             this.grounded = false;
 
         if (Phaser.Input.Keyboard.JustDown(keySPACE) && this.grounded && this.hp.value > 0) {
+
             this.justJumped = true;
             this.player1.anims.stop();
             this.player1.setFrame('fart09');
