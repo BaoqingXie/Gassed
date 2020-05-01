@@ -6,20 +6,18 @@ class Play extends Phaser.Scene {
     preload() {
         this.load.path = './assets/';
         this.load.atlas('player1', 'player1.png', 'player1.json');
-
+        this.load.image('background','Background.png');
         this.load.image('floor', 'floor.png');
         this.load.image('fuelbar', 'fuelbar.png');
         this.load.image('Burrito', 'Burrito.png');
         this.load.image('Banana', 'Banana.png');
-
-        // can replace with bg asset
-        this.cameras.main.setBackgroundColor('#FACADE') // just so i can see the character
-
     }
 
-    create() {
 
-        //creating anims using the atlas - can tinker with
+    create(){
+        // place background tile sprite
+        this.backgound = this.add.tileSprite(0, 0, 640, 480, 'background').setScale(1.25,1.25).setOrigin(0, 0);
+        //creating anims using the atlas
         this.anims.create({
             key: 'run', // default running animation
             frames: this.anims.generateFrameNames('player1', {
@@ -129,6 +127,10 @@ class Play extends Phaser.Scene {
     update() {
 
         if (this.player1.y + this.player1.height >= this.floor.y - 1 && this.grounded == false) {
+
+        //Background scrolling
+        this.backgound.tilePositionX -= 4;
+
             this.grounded = true;
             if (!this.justJumped)
                 this.player1.play('run'); // when grounded/not jumping, play run animation
