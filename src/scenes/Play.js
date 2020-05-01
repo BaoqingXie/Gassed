@@ -6,7 +6,6 @@ class Play extends Phaser.Scene {
     preload() {
         this.load.path = './assets/';
         this.load.image('floor','floor.png');
-        this.load.image('background','Background.png');
         // bgcolor line should be replaced with loading bg image
         // this.cameras.main.setBackgroundColor('#FACADE') // just so i can see the character
         
@@ -16,7 +15,7 @@ class Play extends Phaser.Scene {
 
     create(){
         // place background tile sprite
-        this.backgound = this.add.tileSprite(0, 0, 640, 480, 'background').setScale(1.25,1.25).setOrigin(0, 0);
+        this.background = this.add.tileSprite(0, 0, 640, 480, 'background').setScale(1.25,1.25).setOrigin(0, 0);
         //creating anims using the atlas
         this.anims.create({
             key: 'run',
@@ -81,7 +80,6 @@ class Play extends Phaser.Scene {
 
 
 
-
         this.grounded = false;
         this.justJumped = false;
 
@@ -89,7 +87,8 @@ class Play extends Phaser.Scene {
 
     update() {
 
-        this.backgound.tilePositionX -= 4;  // scroll tile sprite
+        
+        this.background.tilePositionX += 4;  // scroll tile sprite
 
         if (this.player1.y + this.player1.height >= this.floor.y - 1 && this.grounded == false)
             this.grounded = true;

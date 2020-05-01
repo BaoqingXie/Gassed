@@ -9,15 +9,16 @@ class Menu extends Phaser.Scene {
   
   
     preload() {
-  
+        this.load.path = './assets/';
         // load audio
         // this.load.audio('sfx_select', './assets/blip_select12.wav');
-        this.load.image('Background','Background.png');
+        this.load.image('background','Background.png');
+        
     }
   
     create() {
       //menu background
-      this.background = this.add.tileSprite(0, 0, 640, 480, 'Background').setScale(1.25, 1.25).setOrigin(0, 0);
+      this.background = this.add.tileSprite(0, 0, 640, 480, 'background').setScale(1.25, 1.25).setOrigin(0, 0);
   
         // menu display
         let menuConfig = {
@@ -38,27 +39,23 @@ class Menu extends Phaser.Scene {
         let centerY = game.config.height/2;
         let textSpacer = 64;
   
-        this.add.text(centerX, centerY- textSpacer, 'ROCKET PATROL', menuConfig).setOrigin(0.5);
-        this.add.text(centerX, centerY, 'Use ←→ arrows to move & (F) to Fire', menuConfig).setOrigin(0.5);
+        this.add.text(centerX, centerY- textSpacer, 'Gassed', menuConfig).setOrigin(0.5);
+        this.add.text(centerX, centerY, ' (space key) to Jump', menuConfig).setOrigin(0.5);
         menuConfig.backgroundColor = '#00FF00';
         menuConfig.color = '#000';
-        this.add.text(centerX, centerY + textSpacer, 'Press ← for Easy or → for Hard', menuConfig).setOrigin(0.5);
-          
-        
+        this.add.text(centerX, centerY + textSpacer, 'Press Space to start', menuConfig).setOrigin(0.5);
+                 
         // define keys
-        keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
-        keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+        keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+    
     }
   
   
     update() {
-        if (Phaser.Input.Keyboard.JustDown(keyLEFT)) {
-            // easy mode
-            game.settings = {
-                spaceshipSpeed: 3,
-                gameTimer: 60000    
-            }
-            this.sound.play('sfx_select');
+
+        this.background.tilePositionX += 4;  // scroll tile sprite
+        if (Phaser.Input.Keyboard.JustDown(keySPACE)) {
+
             this.scene.start("playScene");    
         }
   
