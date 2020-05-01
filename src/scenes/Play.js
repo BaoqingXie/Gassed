@@ -5,6 +5,10 @@ class Play extends Phaser.Scene {
 
     preload() {
         this.load.path = './assets/';
+
+
+        this.load.image('floor','floor.png');
+
         this.load.atlas('player1', 'player1.png', 'player1.json');
         this.load.image('background','Background.png');
         this.load.image('floor', 'floor.png');
@@ -16,7 +20,7 @@ class Play extends Phaser.Scene {
 
     create(){
         // place background tile sprite
-        this.backgound = this.add.tileSprite(0, 0, 640, 480, 'background').setScale(1.25,1.25).setOrigin(0, 0);
+        this.background = this.add.tileSprite(0, 0, 640, 480, 'background').setScale(1.25,1.25).setOrigin(0, 0);
         //creating anims using the atlas
         this.anims.create({
             key: 'run', // default running animation
@@ -115,21 +119,23 @@ class Play extends Phaser.Scene {
         this.banana.body.setSize(10, 10)
         this.banana.body.setImmovable(true);
 
+
         this.burrito = this.physics.add.sprite(centerX, centerY - 100, 'Burrito');
         this.burrito.body.setSize(10, 10)
         this.burrito.body.setImmovable(true);
 
-        this.grounded = false;
-        this.justJumped = false;
-        this.isFarting = false; // added to clean up animation
+
+
     }
 
     update() {
 
+
         if (this.player1.y + this.player1.height >= this.floor.y - 1 && this.grounded == false) {
 
         //Background scrolling
-        this.backgound.tilePositionX -= 4;
+
+  
 
             this.grounded = true;
             if (!this.justJumped)
