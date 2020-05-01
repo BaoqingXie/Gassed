@@ -21,7 +21,9 @@ let game = new Phaser.Game(config);
 
 
 let keySPACE;
+var timerEvent;
 
 
 let centerX = game.config.width/2;
 let centerY = game.config.height/2;
+

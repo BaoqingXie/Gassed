@@ -27,8 +27,8 @@ class HealthBar {
     increase(amount) {
         this.value += amount;
 
-        if (this.value >100) {
-            this.value = 100;
+        if (this.value >300) {
+            this.value = 300;
         }
 
         this.draw();
