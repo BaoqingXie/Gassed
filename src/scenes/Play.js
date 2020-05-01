@@ -5,12 +5,8 @@ class Play extends Phaser.Scene {
 
     preload() {
         this.load.path = './assets/';
-
-
         this.load.image('floor','floor.png');
-
         this.load.atlas('player1', 'player1.png', 'player1.json');
-
         this.load.image('background','Background.png');
         this.load.image('floor', 'floor.png');
         this.load.image('fuelbar', 'fuelbar.png');
@@ -133,7 +129,7 @@ class Play extends Phaser.Scene {
 
       //Background scrolling
         this.background.tilePositionX += 4;
-        
+
         if (this.player1.y + this.player1.height >= this.floor.y - 1 && this.grounded == false) {
             this.grounded = true;
             if (!this.justJumped)
