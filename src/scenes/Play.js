@@ -5,19 +5,20 @@ class Play extends Phaser.Scene {
 
     preload() {
         this.load.path = './assets/';
+        this.load.atlas('player1', 'player1.png', 'player1.json');
         this.load.image('floor','floor.png');
+        this.load.image('fuelbar', 'fuelbar.png');
 
-        // bgcolor line should be replaced with loading bg image
+        // can replace with bg asset
         this.cameras.main.setBackgroundColor('#FACADE') // just so i can see the character
 
-        //this.load.image('player1','guy.png');
-        this.load.atlas('player1', 'player1.png', 'player1.json');
+
     }
 
     create(){
-        //creating anims using the atlas
+        //creating anims using the atlas - can tinker with
         this.anims.create({
-            key: 'run',
+            key: 'run', // default running animation
             frames: this.anims.generateFrameNames('player1', {
                 start: 0,
                 end: 4,
@@ -27,11 +28,35 @@ class Play extends Phaser.Scene {
             frameRate: 15,
             repeat: -1
         });
-        // cycles through the entire fart animation (tap spacebar?)
+        
         this.anims.create({
-            key: 'full-fart',
+            key: 'jump-fart', // plays entire fart animation
             frames: this.anims.generateFrameNames('player1', {
                 start: 0,
+                end: 9,
+                zeroPad: 2,
+                prefix: 'fart',
+            }),
+            frameRate: 12,
+            repeat: 0
+        });
+        
+        this.anims.create({
+            key: 'loop-fart', // looping 2 frames while in the air (while holding spacebar?)
+            frames: this.anims.generateFrameNames('player1', {
+                start: 3,
+                end: 7,
+                zeroPad: 2,
+                prefix: 'fart',
+            }),
+            frameRate: 8,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'falling', // fart dissipating (tap spacebar?)
+            frames: this.anims.generateFrameNames('player1', {
+                start: 6,
                 end: 9,
                 zeroPad: 2,
                 prefix: 'fart',
@@ -39,21 +64,9 @@ class Play extends Phaser.Scene {
             frameRate: 8,
             repeat: 0
         });
-        // looping 2 frames while in the air (while holding spacebar?)
+        
         this.anims.create({
-            key: 'fart',
-            frames: this.anims.generateFrameNames('player1', {
-                start: 4,
-                end: 5,
-                zeroPad: 2,
-                prefix: 'fart',
-            }),
-            frameRate: 8,
-            repeat: -1
-        });
-        // death animation
-        this.anims.create({
-            key: 'death',
+            key: 'death', // death animation
             frames: this.anims.generateFrameNames('player1', {
                 start: 0,
                 end: 7,
@@ -66,8 +79,8 @@ class Play extends Phaser.Scene {
 
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
-        this.player1 = this.physics.add.sprite(centerX,centerY,'player1');
-        this.player1.play('run'); // default run animation
+        this.player1 = this.physics.add.sprite(centerX,centerY,'player1').setScale(0.5);
+        this.player1.setFrame('death00'); // this is the idle frame
         this.player1.setGravityY(500);
 
         this.floor = this.physics.add.sprite(centerX,this.game.config.height*0.90,'floor');
@@ -82,18 +95,22 @@ class Play extends Phaser.Scene {
 
         this.grounded = false;
         this.justJumped = false;
-
+        this.isFarting = false; // added to clean up animation
     }
 
     update() {
-        if (this.player1.y + this.player1.height >= this.floor.y - 1 && this.grounded == false)
+        if (this.player1.y + this.player1.height >= this.floor.y - 1 && this.grounded == false){
             this.grounded = true;
+            if(!this.justJumped)
+                this.player1.play('run'); // when grounded/not jumping, play run animation
+        }
             
         if (this.player1.y + this.player1.height < this.floor.y - 1 && this.grounded == true)
             this.grounded = false;
 
         if (Phaser.Input.Keyboard.JustDown(keySPACE) && this.grounded){
             this.justJumped = true;
+            this.player1.play('jump-fart');
             console.log('jump');
             this.player1.setVelocity(0,-400);
             this.grounded = false;
@@ -102,10 +119,18 @@ class Play extends Phaser.Scene {
 
         if (keySPACE.isDown && !this.grounded && !this.justJumped){
             console.log('fart');
+            if(!this.isFarting){
+                this.player1.play('loop-fart');
+                this.isFarting = true;
+            }
             this.player1.setAcceleration(0,-950);
         }
         else {
             this.player1.setAcceleration(0,0);
+            if(this.isFarting && !this.grounded){
+                this.player1.play('falling');
+                this.isFarting = false;
+            }
         }
 
     }
