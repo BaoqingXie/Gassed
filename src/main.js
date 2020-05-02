@@ -14,14 +14,14 @@ let config = {
         }
     },
 
-    scene: [Play],
+    scene: [Menu,Play],
 };
 
 let game = new Phaser.Game(config);
 
 
 let keySPACE;
+var timerEvent;
 
-//CONSTANTS
 let centerX = game.config.width/2;
 let centerY = game.config.height/2;

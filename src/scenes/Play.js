@@ -5,17 +5,22 @@ class Play extends Phaser.Scene {
 
     preload() {
         this.load.path = './assets/';
+
+        this.load.image('floor', 'floor.png');
         this.load.atlas('player1', 'player1.png', 'player1.json');
-        this.load.image('floor','floor.png');
+        this.load.image('background', 'Background.png');
+        this.load.image('floor', 'floor.png');
         this.load.image('fuelbar', 'fuelbar.png');
-
-        // can replace with bg asset
-        this.cameras.main.setBackgroundColor('#FACADE') // just so i can see the character
-
+        this.load.image('Burrito', 'Burrito.png');
+        this.load.image('Banana', 'Banana.png');
     }
 
-    create(){
-        //creating anims using the atlas - can tinker with
+
+    create() {
+        // place background tile sprite
+        this.background = this.add.tileSprite(0, 0, 640, 480, 'background').setScale(1.25, 1.25).setOrigin(0, 0);
+      
+        //creating anims using the atlas
         this.anims.create({
             key: 'run', // default running animation
             frames: this.anims.generateFrameNames('player1', {
@@ -27,7 +32,7 @@ class Play extends Phaser.Scene {
             frameRate: 15,
             repeat: -1
         });
-        
+
         this.anims.create({
             key: 'jump-fart', // plays entire fart animation
             frames: this.anims.generateFrameNames('player1', {
@@ -39,7 +44,7 @@ class Play extends Phaser.Scene {
             frameRate: 12,
             repeat: 0
         });
-        
+
         this.anims.create({
             key: 'loop-fart', // looping 2 frames while in the air (while holding spacebar?)
             frames: this.anims.generateFrameNames('player1', {
@@ -63,7 +68,7 @@ class Play extends Phaser.Scene {
             frameRate: 8,
             repeat: 0
         });
-        
+
         this.anims.create({
             key: 'death', // death animation
             frames: this.anims.generateFrameNames('player1', {
@@ -76,70 +81,136 @@ class Play extends Phaser.Scene {
             repeat: 0
         });
 
+
+        //timer for the game score
+        timerEvent = this.time.addEvent({
+            delay: 600,                // ms
+            callback: this.printTime,
+            //args: [],
+            callbackScope: this,
+            loop: true
+        });
+        this.elapsed = timerEvent.getRepeatCount();
+        this.time = 0;
+
+        //text
+        this.text = this.add.text(690, 20);
+
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
-        this.player1 = this.physics.add.sprite(centerX,centerY,'player1').setScale(0.5);
+        this.player1 = this.physics.add.sprite(100, 500, 'player1').setScale(0.5);
         this.player1.setFrame('death00'); // this is the idle frame
-        this.player1.setGravityY(750);
-        this.player1.body.setMaxSpeed(500);
+        this.player1.setGravityY(500);
+        this.player1.setCollideWorldBounds(true);
 
-        this.floor = this.physics.add.sprite(centerX,this.game.config.height*0.90,'floor');
-        this.floor.displayWidth = this.sys.game.config.width*1.1;
-        this.floor.displayHeight = this.game.config.height*0.05
+        this.floor = this.physics.add.sprite(centerX, this.game.config.height * 0.99, 'floor');
+        this.floor.displayWidth = this.sys.game.config.width * 1.1;
+        this.floor.displayHeight = this.game.config.height * 0.05
         this.floor.setImmovable();
 
-        this.physics.add.collider(this.player1,this.floor);
+        this.physics.add.collider(this.player1, this.floor);
 
+        //health bar
+        this.hp = new HealthBar(this, 20, 20);
 
-        // CONSTANTS
-        //this.JUMPHEIGHT = 
+        //add items
+        this.banana = this.physics.add.sprite(this.getRandomArbitrary(800, 1000), this.getRandomArbitrary(200, 100), 'Banana');
+        this.banana.body.setSize(10, 10)
+        this.banana.body.setImmovable(true);
 
+        this.burrito = this.physics.add.sprite(this.getRandomArbitrary(800, 1000), this.getRandomArbitrary(200, 400), 'Burrito');
+        this.burrito.body.setSize(10, 10)
+        this.burrito.body.setImmovable(true);
 
         // player states
         this.grounded = false;
         this.justJumped = false;
         this.isFarting = false; // added to clean up animation
+
     }
 
     update() {
-        if (this.player1.y + this.player1.height/2 >= this.floor.y - 1 && this.grounded == false){
+        //Background scrolling
+        this.background.tilePositionX += 4;
+
+        if (this.player1.y + this.player1.height >= this.floor.y - 1 && this.grounded == false) {
             this.grounded = true;
-            if(!this.justJumped)
+            if (!this.justJumped)
                 this.player1.play('run'); // when grounded/not jumping, play run animation
         }
-            
-        if (this.player1.y + this.player1.height/2 < this.floor.y - 1 && this.grounded == true)
+
+        if (this.player1.y + this.player1.height < this.floor.y - 1 && this.grounded == true)
             this.grounded = false;
 
+        if (Phaser.Input.Keyboard.JustDown(keySPACE) && this.grounded && this.hp.value > 0) {
 
-        // jump
-        if (Phaser.Input.Keyboard.JustDown(keySPACE) && this.grounded){
             this.justJumped = true;
             this.player1.anims.stop();
             this.player1.setFrame('fart09');
-            //console.log('jump');
-            this.player1.setVelocity(0,-1000);
+            console.log('jump');
+            this.player1.setVelocity(0, -400);
             this.grounded = false;
-            setTimeout(() => {this.justJumped = false;}, 400);
+            setTimeout(() => { this.justJumped = false; }, 500);
+            this.hp.decrease(10);
         }
 
-
-        // fart
-        if (keySPACE.isDown && !this.grounded && !this.justJumped){
-            //console.log('fart');
-            if(!this.isFarting){
+        if (keySPACE.isDown && !this.grounded && !this.justJumped && this.hp.value > 0) {
+            console.log('fart');
+            if (!this.isFarting) {
                 this.player1.play('loop-fart');
                 this.isFarting = true;
             }
-            this.player1.setAcceleration(0,-1500);
+            this.hp.decrease(0.1);
+            this.player1.setAcceleration(0, -950);
         }
         else {
-            this.player1.setAcceleration(0,0);
-            if(this.isFarting && !this.grounded){
+            this.player1.setAcceleration(0, 0);
+            if (this.isFarting && !this.grounded) {
                 this.player1.play('falling');
                 this.isFarting = false;
             }
         }
 
+        //item moving
+        this.burrito.setVelocity(-100, 0);
+        this.banana.setVelocity(-100, 0);
+
+        this.physics.overlap(this.player1, this.burrito, this.increase, null, this);
+        this.physics.overlap(this.player1, this.banana, this.decrease, null, this);
+
+        if (this.burrito.x < 0) {
+            this.burrito.setX(this.getRandomArbitrary(800, 1000));
+            this.burrito.setY(this.getRandomArbitrary(200, 400));
+        }
+
+        if (this.banana.x < 0) {
+            this.banana.setX(this.getRandomArbitrary(800, 1000));
+            this.banana.setY(this.getRandomArbitrary(200, 100));
+        }
+
+    }
+    increase() {
+        this.burrito.destroy();
+        this.hp.increase(40);
+        console.log('increase');
+        this.burrito = this.physics.add.sprite(this.getRandomArbitrary(800, 1000), this.getRandomArbitrary(200, 400), 'Burrito');
+    }
+
+    decrease() {
+        this.banana.destroy();
+        this.hp.decrease(40);
+        console.log('decrease');
+        this.banana = this.physics.add.sprite(this.getRandomArbitrary(800, 1000), this.getRandomArbitrary(200, 100), 'Banana');
+
+    }
+
+    printTime() {
+        console.log(this.time);
+        this.text.setText('Score: ' + this.time);
+        this.time += 1;
+    }
+
+    getRandomArbitrary(min, max) {
+        return Math.random() * (max - min) + min;
     }
 }
