@@ -5,19 +5,20 @@ class Play extends Phaser.Scene {
 
     preload() {
         this.load.path = './assets/';
+        this.load.image('floor', 'floor.png');
         this.load.atlas('player1', 'player1.png', 'player1.json');
+        this.load.image('background', 'Background.png');
         this.load.image('floor', 'floor.png');
         this.load.image('fuelbar', 'fuelbar.png');
         this.load.image('Burrito', 'Burrito.png');
         this.load.image('Banana', 'Banana.png');
-
-        // can replace with bg asset
-        this.cameras.main.setBackgroundColor('#FACADE') // just so i can see the character
-
     }
 
+
     create() {
-        //creating anims using the atlas - can tinker with
+        // place background tile sprite
+        this.background = this.add.tileSprite(0, 0, 640, 480, 'background').setScale(1.25, 1.25).setOrigin(0, 0);
+        //creating anims using the atlas
         this.anims.create({
             key: 'run', // default running animation
             frames: this.anims.generateFrameNames('player1', {
@@ -78,6 +79,7 @@ class Play extends Phaser.Scene {
             repeat: 0
         });
 
+
         //timer for the game score
         timerEvent = this.time.addEvent({
             delay: 600,                // ms
@@ -94,12 +96,12 @@ class Play extends Phaser.Scene {
 
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
-        this.player1 = this.physics.add.sprite(centerX, centerY, 'player1').setScale(0.5);
+        this.player1 = this.physics.add.sprite(100, 500, 'player1').setScale(0.5);
         this.player1.setFrame('death00'); // this is the idle frame
         this.player1.setGravityY(500);
         this.player1.setCollideWorldBounds(true);
 
-        this.floor = this.physics.add.sprite(centerX, this.game.config.height * 0.90, 'floor');
+        this.floor = this.physics.add.sprite(centerX, this.game.config.height * 0.99, 'floor');
         this.floor.displayWidth = this.sys.game.config.width * 1.1;
         this.floor.displayHeight = this.game.config.height * 0.05
         this.floor.setImmovable();
@@ -121,9 +123,14 @@ class Play extends Phaser.Scene {
         this.grounded = false;
         this.justJumped = false;
         this.isFarting = false; // added to clean up animation
+
     }
 
     update() {
+
+        //Background scrolling
+        this.background.tilePositionX += 4;
+
         if (this.player1.y + this.player1.height >= this.floor.y - 1 && this.grounded == false) {
             this.grounded = true;
             if (!this.justJumped)
@@ -134,6 +141,7 @@ class Play extends Phaser.Scene {
             this.grounded = false;
 
         if (Phaser.Input.Keyboard.JustDown(keySPACE) && this.grounded && this.hp.value > 0) {
+
             this.justJumped = true;
             this.player1.anims.stop();
             this.player1.setFrame('fart09');
@@ -168,12 +176,12 @@ class Play extends Phaser.Scene {
         this.physics.overlap(this.player1, this.burrito, this.increase, null, this);
         this.physics.overlap(this.player1, this.banana, this.decrease, null, this);
 
-        if(this.burrito.x < 0){
+        if (this.burrito.x < 0) {
             this.burrito.setX(this.getRandomArbitrary(800, 1000));
             this.burrito.setY(this.getRandomArbitrary(200, 400));
         }
 
-        if(this.banana.x < 0){
+        if (this.banana.x < 0) {
             this.banana.setX(this.getRandomArbitrary(800, 1000));
             this.banana.setY(this.getRandomArbitrary(200, 100));
         }
@@ -181,17 +189,17 @@ class Play extends Phaser.Scene {
     }
     increase() {
         this.burrito.destroy();
-        this.hp.increase(20);
+        this.hp.increase(40);
         console.log('increase');
         this.burrito = this.physics.add.sprite(this.getRandomArbitrary(800, 1000), this.getRandomArbitrary(200, 400), 'Burrito');
     }
 
     decrease() {
         this.banana.destroy();
-        this.hp.decrease(20);
+        this.hp.decrease(40);
         console.log('decrease');
         this.banana = this.physics.add.sprite(this.getRandomArbitrary(800, 1000), this.getRandomArbitrary(200, 100), 'Banana');
-        
+
     }
 
     printTime() {
