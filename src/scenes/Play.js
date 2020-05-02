@@ -12,7 +12,6 @@ class Play extends Phaser.Scene {
         // can replace with bg asset
         this.cameras.main.setBackgroundColor('#FACADE') // just so i can see the character
 
-
     }
 
     create(){
@@ -81,7 +80,8 @@ class Play extends Phaser.Scene {
 
         this.player1 = this.physics.add.sprite(centerX,centerY,'player1').setScale(0.5);
         this.player1.setFrame('death00'); // this is the idle frame
-        this.player1.setGravityY(500);
+        this.player1.setGravityY(750);
+        this.player1.body.setMaxSpeed(500);
 
         this.floor = this.physics.add.sprite(centerX,this.game.config.height*0.90,'floor');
         this.floor.displayWidth = this.sys.game.config.width*1.1;
@@ -91,39 +91,47 @@ class Play extends Phaser.Scene {
         this.physics.add.collider(this.player1,this.floor);
 
 
+        // CONSTANTS
+        //this.JUMPHEIGHT = 
 
 
+        // player states
         this.grounded = false;
         this.justJumped = false;
         this.isFarting = false; // added to clean up animation
     }
 
     update() {
-        if (this.player1.y + this.player1.height >= this.floor.y - 1 && this.grounded == false){
+        if (this.player1.y + this.player1.height/2 >= this.floor.y - 1 && this.grounded == false){
             this.grounded = true;
             if(!this.justJumped)
                 this.player1.play('run'); // when grounded/not jumping, play run animation
         }
             
-        if (this.player1.y + this.player1.height < this.floor.y - 1 && this.grounded == true)
+        if (this.player1.y + this.player1.height/2 < this.floor.y - 1 && this.grounded == true)
             this.grounded = false;
 
+
+        // jump
         if (Phaser.Input.Keyboard.JustDown(keySPACE) && this.grounded){
             this.justJumped = true;
-            this.player1.play('jump-fart');
-            console.log('jump');
-            this.player1.setVelocity(0,-400);
+            this.player1.anims.stop();
+            this.player1.setFrame('fart09');
+            //console.log('jump');
+            this.player1.setVelocity(0,-1000);
             this.grounded = false;
-            setTimeout(() => {this.justJumped = false;}, 500);
+            setTimeout(() => {this.justJumped = false;}, 400);
         }
 
+
+        // fart
         if (keySPACE.isDown && !this.grounded && !this.justJumped){
-            console.log('fart');
+            //console.log('fart');
             if(!this.isFarting){
                 this.player1.play('loop-fart');
                 this.isFarting = true;
             }
-            this.player1.setAcceleration(0,-950);
+            this.player1.setAcceleration(0,-1500);
         }
         else {
             this.player1.setAcceleration(0,0);
