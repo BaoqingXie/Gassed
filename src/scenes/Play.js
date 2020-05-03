@@ -6,13 +6,13 @@ class Play extends Phaser.Scene {
     preload() {
         this.load.path = './assets/';
 
-        this.load.image('floor', 'floor.png');
         this.load.atlas('player1', 'player1.png', 'player1.json');
         this.load.image('background', 'Background.png');
-        this.load.image('floor', 'floor.png');
+        this.load.image('floor', 'Floor.png');
         this.load.image('fuelbar', 'fuelbar.png');
         this.load.image('Burrito', 'Burrito.png');
         this.load.image('Banana', 'Banana.png');
+        this.load.image('fart', 'fart.png');
         this.load.image('wall', 'obstacle1.png');
     }
 
@@ -128,6 +128,9 @@ class Play extends Phaser.Scene {
         this.justJumped = false;
         this.isFarting = false; // added to clean up animation
 
+        //health bar
+        this.hp = new HealthBar(this, 50, 20);
+        this.add.image(30,25,'fart').setScale(0.6,0.6);
 
         //add items
         this.banana = this.physics.add.sprite(this.getRandomArbitrary(800, 1000), this.getRandomArbitrary(200, 100), 'Banana');
@@ -137,12 +140,7 @@ class Play extends Phaser.Scene {
         this.burrito = this.physics.add.sprite(this.getRandomArbitrary(800, 1000), this.getRandomArbitrary(200, 400), 'Burrito');
         this.burrito.body.setSize(10, 10)
         this.burrito.body.setImmovable(true);
-
-
-        //health bar
-        this.hp = new HealthBar(this, 20, 20);
-
-
+        
         //timer for the game score
         timerEvent = this.time.addEvent({
             delay: 600,                // ms
@@ -233,12 +231,11 @@ class Play extends Phaser.Scene {
         this.physics.overlap(this.player1, this.burrito, this.increase, null, this)
         this.update_item(this.burrito);
 
-
         //fail state check
         if (this.player1.x < -this.player1.width/2){
             //game over
             this.player1.setX(Width*2); //temporary. get the player off screen
-            gameSpeed = 0;
+            gameSpeed = 0; //freeze game
         }
     }
 
@@ -255,8 +252,6 @@ class Play extends Phaser.Scene {
     }
 
 
-
-
     update_wall(wall){
         wall.setVelocityX(-gameSpeed*300);
 
@@ -264,8 +259,6 @@ class Play extends Phaser.Scene {
             wall.setX(this.getRandomArbitrary(centerX*2, centerX*5));
         }
     }
-
-
 
     update_item(item){
         item.setVelocityX(-gameSpeed*300);
