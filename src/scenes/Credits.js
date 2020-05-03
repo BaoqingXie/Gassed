@@ -9,6 +9,7 @@ class Credits extends Phaser.Scene {
     preload() {
         this.load.path = './assets/';
         this.load.atlas('Back', 'Back.png', 'Back.json');
+        this.load.audio('Selection', 'Selection.wav');
 
     }
 
@@ -45,12 +46,16 @@ class Credits extends Phaser.Scene {
             useHandCursor: true
         });
 
-        this.input.on('gameobjectdown', (pointer, gameObject, event) => {
+        this.input.on('gameobjectover', (pointer, gameObject, event) => {
             gameObject.setFrame(2);
         });
 
-        this.input.on('gameobjectup', (pointer, gameObject, event) => {
+        this.input.on('gameobjectout', (pointer, gameObject, event) => {
             gameObject.setFrame(1);
+        });
+
+        this.input.on('gameobjectdown', (pointer, gameObject, event) => {
+            this.sound.play('Selection', {volume:0.25});
             this.scene.start("menuScene");
         });
 

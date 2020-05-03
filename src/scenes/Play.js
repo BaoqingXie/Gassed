@@ -14,6 +14,10 @@ class Play extends Phaser.Scene {
         this.load.image('Banana', 'Banana.png');
         this.load.image('fart', 'fart.png');
         this.load.image('wall', 'obstacle1.png');
+        this.load.audio('fart_J', 'Fart_J.wav');
+        this.load.audio('fart_F', 'Fart_F.wav');
+        this.load.audio('fart_D', 'Fart_D.wav');
+        this.load.audio('Eat', 'Eat.wav');
     }
 
 
@@ -83,13 +87,9 @@ class Play extends Phaser.Scene {
         });
 
 
-        
-
+    
         //input
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-
-
-        
 
         //floor
         this.floor = this.physics.add.sprite(centerX, Height * 0.99, 'floor');
@@ -153,14 +153,16 @@ class Play extends Phaser.Scene {
         this.time = 0;
 
         //score display
-        this.text = this.add.text(690, 20);
+        let smallConfig = {
+            fontFamily: 'Comic Sans MS',
+            fontSize: '20px',
+            color: '#808000',
+            align: 'left',
+            fixedWidth: 0,
+        }
+        this.text = this.add.text(670, 20, [] , smallConfig);
     }
     
-
-
-
-
-
 
 
     update() {
@@ -183,10 +185,12 @@ class Play extends Phaser.Scene {
         //jump
         if (Phaser.Input.Keyboard.JustDown(keySPACE) && this.grounded && this.hp.value > 0) {
             this.justJumped = true;
+            this.sound.play('fart_J', {volume:0.25});
             this.player1.anims.stop();
             this.player1.setFrame('fart09');
             this.player1.setVelocity(0, -jumpHeight);
             this.grounded = false;
+            this.hp.decrease(5);
             setTimeout(() => { this.justJumped = false; }, 300);  //fart delay
         }
 
@@ -195,6 +199,7 @@ class Play extends Phaser.Scene {
             if (!this.isFarting) {
                 this.player1.play('loop-fart');
                 this.isFarting = true;
+                this.sound.play('fart_F', {volume:0.25});
             }
             this.hp.decrease(fartConsumption);
             this.player1.setAccelerationY(-fartStrength);
@@ -271,12 +276,14 @@ class Play extends Phaser.Scene {
 
     increase() {
         this.burrito.destroy();
+        this.sound.play('Eat', {volume:0.25});
         this.hp.increase(50);
         this.burrito = this.physics.add.sprite(this.getRandomArbitrary(centerX*3, centerX*6), this.getRandomArbitrary(centerY*0.5, centerY*1.7), 'Burrito');
     }
 
     decrease() {
         this.banana.destroy();
+        this.sound.play('Eat', {volume:0.25});
         this.hp.decrease(30);
         this.banana = this.physics.add.sprite(this.getRandomArbitrary(centerX*3, centerX*6), this.getRandomArbitrary(centerY*0.5, centerY*1.7), 'Banana');
     }
@@ -285,14 +292,12 @@ class Play extends Phaser.Scene {
 
 
     printTime() {
-        this.text.setText('Score: ' + this.time);
+        this.text.setText('Score: ' + this.time + 'm');
         this.time += 1;
     }
 
     getRandomArbitrary(min, max) {
         return Math.random() * (max - min) + min;
     }
-
-
 
 }
