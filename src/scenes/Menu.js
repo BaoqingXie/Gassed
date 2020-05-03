@@ -74,7 +74,7 @@ class Menu extends Phaser.Scene {
 
         this.input.on('gameobjectdown', (pointer, gameObject, event) => {
             this.sound.play('Selection', {volume:0.25});
-            if(gameObject===this.startLogo){
+            if(gameObject===this.startButton){
                 this.scene.start("playScene");  
             }else if(gameObject===this.instructionButton){
                 this.scene.start("InstructionScene");  
