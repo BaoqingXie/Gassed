@@ -98,9 +98,10 @@ class Play extends Phaser.Scene {
         this.floor.setImmovable();
         
         //ceiling
-        this.ceiling = this.physics.add.sprite(centerX, -10, 'floor');
+        this.ceiling = this.physics.add.sprite(centerX, -30, 'floor');
         this.ceiling.displayWidth = Width * 1.2;
-        this.ceiling.displayHeight = Height * 0.01
+        this.ceiling.displayHeight = Height * 0.1
+        this.ceiling.setImmovable();
        
         //add walls
         this.wall1 = this.physics.add.sprite(Width*2,this.getRandomArbitrary(0,Height),'wall');
@@ -113,7 +114,7 @@ class Play extends Phaser.Scene {
         //player
         this.player1 = this.physics.add.sprite(playerStartPos, Height*0.85 - this.floor.height, 'player1').setScale(0.7);
         this.player1.setFrame('death00'); // this is the idle frame
-        this.player1.setGravityY(650);
+        this.player1.setGravityY(gravity);
 
         //collision
         this.physics.add.collider(this.player1, this.ceiling);
@@ -163,7 +164,7 @@ class Play extends Phaser.Scene {
 
 
     update() {
-        //console.log('x',this.player1.x.toFixed(0),'y',this.player1.y.toFixed(0));
+        //faster game speed over time
         if (gameSpeed<=2)
             gameSpeed *= 1.0001
 
@@ -184,7 +185,7 @@ class Play extends Phaser.Scene {
             this.justJumped = true;
             this.player1.anims.stop();
             this.player1.setFrame('fart09');
-            this.player1.setVelocity(0, -400);
+            this.player1.setVelocity(0, -jumpHeight);
             this.grounded = false;
             setTimeout(() => { this.justJumped = false; }, 300);  //fart delay
         }
@@ -195,8 +196,8 @@ class Play extends Phaser.Scene {
                 this.player1.play('loop-fart');
                 this.isFarting = true;
             }
-            this.hp.decrease(0.25);
-            this.player1.setAccelerationY(-1000);
+            this.hp.decrease(fartConsumption);
+            this.player1.setAccelerationY(-fartStrength);
         }
         else {
             this.player1.setAcceleration(0, 0);
@@ -230,19 +231,22 @@ class Play extends Phaser.Scene {
         this.physics.overlap(this.player1, this.burrito, this.increase, null, this)
         this.update_item(this.burrito);
 
-        if (this.player1.x < -this.player1.width){
-            this.player1.SetX(Width*2) //temporary** move player off screen
+        //fail state check
+        if (this.player1.x < -this.player1.width/2){
+            //game over
+            this.player1.setX(Width*2); //temporary. get the player off screen
             gameSpeed = 0; //freeze game
-          }
+        }
     }
 
 
     fixwallphasing(wall){
         //i get why its called PHASER now...
-        if (this.player1.x < wall.x + wall.width &&
-            this.player1.x + this.player1.width > wall.x &&
-            this.player1.y < wall.y + wall.height &&
-            this.player1.height + this.player1.y > wall.y){
+        let offset = -20
+        if (this.player1.x < wall.x + wall.width + offset &&
+            this.player1.x + this.player1.width + offset > wall.x &&
+            this.player1.y < wall.y + wall.height + offset &&
+            this.player1.height + this.player1.y + offset > wall.y){
                 this.player1.setX(wall.x-this.player1.width);
             }
     }
