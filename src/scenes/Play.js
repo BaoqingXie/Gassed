@@ -98,9 +98,10 @@ class Play extends Phaser.Scene {
         this.floor.setImmovable();
         
         //ceiling
-        this.ceiling = this.physics.add.sprite(centerX, -10, 'floor');
+        this.ceiling = this.physics.add.sprite(centerX, -30, 'floor');
         this.ceiling.displayWidth = Width * 1.2;
-        this.ceiling.displayHeight = Height * 0.01
+        this.ceiling.displayHeight = Height * 0.1
+        this.ceiling.setImmovable();
        
         //add walls
         this.wall1 = this.physics.add.sprite(Width*2,this.getRandomArbitrary(0,Height),'wall');
@@ -186,7 +187,7 @@ class Play extends Phaser.Scene {
             this.justJumped = true;
             this.player1.anims.stop();
             this.player1.setFrame('fart09');
-            this.player1.setVelocity(0, -400);
+            this.player1.setVelocity(0, -jumpHeight);
             this.grounded = false;
             setTimeout(() => { this.justJumped = false; }, 300);  //fart delay
         }
@@ -197,8 +198,8 @@ class Play extends Phaser.Scene {
                 this.player1.play('loop-fart');
                 this.isFarting = true;
             }
-            this.hp.decrease(0.25);
-            this.player1.setAccelerationY(-1000);
+            this.hp.decrease(fartConsumption);
+            this.player1.setAccelerationY(-fartStrength);
         }
         else {
             this.player1.setAcceleration(0, 0);
@@ -234,7 +235,7 @@ class Play extends Phaser.Scene {
 
 
         //fail state check
-        if (this.player1.x < -40){
+        if (this.player1.x < -this.player1.width/2){
             //game over
             this.player1.setX(Width*2); //temporary. get the player off screen
             gameSpeed = 0;

@@ -37,4 +37,7 @@ let timerEvent;
 
 
 let gameSpeed = 1;
-let gravity = 1000;
+let gravity = 800;
+let jumpHeight = 450;
+let fartStrength = 1500;
+let fartConsumption = 0.25;
