@@ -230,6 +230,12 @@ class Play extends Phaser.Scene {
         this.update_item(this.banana);
         this.physics.overlap(this.player1, this.burrito, this.increase, null, this)
         this.update_item(this.burrito);
+
+        
+        if (this.player1.x < -this.player1.width){
+            this.player1.SetX(Width*2) //temporary** move player off screen
+            gameSpeed = 0; //freeze game
+          }
     }
 
 
