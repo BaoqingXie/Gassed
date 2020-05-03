@@ -34,4 +34,7 @@ let centerY = game.config.height/2;
 let playerStartPos = 150;
 
 let timerEvent;
+
+
 let gameSpeed = 1;
+let gravity = 1000;
