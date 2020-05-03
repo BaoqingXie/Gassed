@@ -12,6 +12,7 @@ class Play extends Phaser.Scene {
         this.load.image('fuelbar', 'fuelbar.png');
         this.load.image('Burrito', 'Burrito.png');
         this.load.image('Banana', 'Banana.png');
+        this.load.image('fart', 'fart.png');
     }
 
 
@@ -109,7 +110,8 @@ class Play extends Phaser.Scene {
         this.physics.add.collider(this.player1, this.floor);
 
         //health bar
-        this.hp = new HealthBar(this, 20, 20);
+        this.hp = new HealthBar(this, 50, 20);
+        this.add.image(30,25,'fart').setScale(0.6,0.6);
 
         //add items
         this.banana = this.physics.add.sprite(this.getRandomArbitrary(800, 1000), this.getRandomArbitrary(200, 100), 'Banana');
