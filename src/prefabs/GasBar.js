@@ -1,4 +1,4 @@
-class HealthBar {
+class GasBar {
 
     constructor(scene, x, y) {
         this.bar = new Phaser.GameObjects.Graphics(scene);

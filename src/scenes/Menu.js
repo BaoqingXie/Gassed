@@ -49,26 +49,30 @@ class Menu extends Phaser.Scene {
         menuConfig.color = '#000';
         //this.add.text(centerX, centerY + textSpacer, 'Press Space to start', menuConfig).setOrigin(0.5);
         
-        //logo
-        this.add.sprite(centerX, centerY-200, 'GassedLogo');
-        this.startLogo = this.add.sprite(centerX, centerY-50, 'Start', 1).setScale(0.7,0.7);
-        this.startLogo.setInteractive({
+        this.add.sprite(centerX, centerY/2, 'GassedLogo');  //logo
+
+        this.startButton = this.add.sprite(centerX, centerY, 'Start', 1).setScale(0.75,0.75);
+        this.startButton.setInteractive({
             useHandCursor: true
         });
 
-        this.Instruction = this.add.sprite(centerX, centerY+10, 'Instruction', 1).setScale(0.55,0.55);
-        this.Instruction.setInteractive({
+        this.instructionButton = this.add.sprite(centerX, centerY+60, 'Instruction', 1).setScale(0.55,0.55);
+        this.instructionButton.setInteractive({
             useHandCursor: true
         });
 
-        this.Credits = this.add.sprite(centerX, centerY+70, 'Credits', 1).setScale(0.6,0.6);
-        this.Credits.setInteractive({
+        this.creditsButton = this.add.sprite(centerX, centerY+120, 'Credits', 1).setScale(0.5,0.5);
+        this.creditsButton.setInteractive({
             useHandCursor: true
         });
 
         this.input.on('gameobjectdown', (pointer, gameObject, event) => {
             gameObject.setFrame(2);
             //this.scene.start("playScene");  
+        });
+
+        this.input.on('pointerover', (pointer, gameObject, event) => {
+            //hover over event
         });
 
         this.input.on('gameobjectup', (pointer, gameObject, event) => {

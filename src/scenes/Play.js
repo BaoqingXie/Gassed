@@ -129,7 +129,7 @@ class Play extends Phaser.Scene {
         this.isFarting = false; // added to clean up animation
 
         //health bar
-        this.hp = new HealthBar(this, 50, 20);
+        this.gas = new GasBar(this, 50, 20);
         this.add.image(30,25,'fart').setScale(0.6,0.6);
 
         //add items
@@ -181,7 +181,7 @@ class Play extends Phaser.Scene {
             this.grounded = false;
 
         //jump
-        if (Phaser.Input.Keyboard.JustDown(keySPACE) && this.grounded && this.hp.value > 0) {
+        if (Phaser.Input.Keyboard.JustDown(keySPACE) && this.grounded) {
             this.justJumped = true;
             this.player1.anims.stop();
             this.player1.setFrame('fart09');
@@ -191,7 +191,7 @@ class Play extends Phaser.Scene {
         }
 
         //fart
-        if (keySPACE.isDown && !this.grounded && !this.justJumped && this.hp.value > 0) {
+        if (keySPACE.isDown && !this.grounded && !this.justJumped && this.gas.value > 0) {
             if (!this.isFarting) {
                 this.player1.play('loop-fart');
                 this.isFarting = true;
@@ -209,7 +209,7 @@ class Play extends Phaser.Scene {
 
         //player rubber band
         if (this.player1.x < playerStartPos)
-            this.player1.setVelocityX(10);
+            this.player1.setVelocityX(12);
         else{
             this.player1.setAccelerationX(0);
             this.player1.setVelocityX(0);
@@ -271,13 +271,13 @@ class Play extends Phaser.Scene {
 
     increase() {
         this.burrito.destroy();
-        this.hp.increase(50);
+        this.gas.increase(50);
         this.burrito = this.physics.add.sprite(this.getRandomArbitrary(centerX*3, centerX*6), this.getRandomArbitrary(centerY*0.5, centerY*1.7), 'Burrito');
     }
 
     decrease() {
         this.banana.destroy();
-        this.hp.decrease(30);
+        this.gas.decrease(30);
         this.banana = this.physics.add.sprite(this.getRandomArbitrary(centerX*3, centerX*6), this.getRandomArbitrary(centerY*0.5, centerY*1.7), 'Banana');
     }
 
@@ -285,8 +285,10 @@ class Play extends Phaser.Scene {
 
 
     printTime() {
-        this.text.setText('Score: ' + this.time);
-        this.time += 1;
+        if (gameSpeed > 0){
+            this.text.setText('Score: ' + this.time);
+            this.time += 1;
+        }
     }
 
     getRandomArbitrary(min, max) {
