@@ -5,6 +5,7 @@ class Play extends Phaser.Scene {
 
     preload() {
         this.load.path = './assets/';
+
         this.load.image('floor', 'floor.png');
         this.load.atlas('player1', 'player1.png', 'player1.json');
         this.load.image('background', 'Background.png');
@@ -16,9 +17,11 @@ class Play extends Phaser.Scene {
     }
 
 
+
     create() {
         // place background tile sprite
         this.background = this.add.tileSprite(0, 0, 640, 480, 'background').setScale(1.25, 1.25).setOrigin(0, 0);
+      
         //creating anims using the atlas
         this.anims.create({
             key: 'run', // default running animation
@@ -129,10 +132,8 @@ class Play extends Phaser.Scene {
     }
 
     update() {
-
         //Background scrolling
         this.background.tilePositionX += 4;
-
 
         if (this.player1.y + this.player1.height >= this.floor.y - 1 && this.grounded == false) {
             this.grounded = true;
