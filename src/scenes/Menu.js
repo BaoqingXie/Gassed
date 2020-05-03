@@ -89,8 +89,6 @@ class Menu extends Phaser.Scene {
   
   
     update() {
-        this.background.tilePositionX += 4;  // scroll tile sprite
-        if (Phaser.Input.Keyboard.JustDown(keySPACE)) {  
-        }
+        this.background.tilePositionX += gameSpeed*2.5;  // scroll tile sprite
     }
   }

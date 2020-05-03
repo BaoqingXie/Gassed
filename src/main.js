@@ -20,8 +20,18 @@ let config = {
 let game = new Phaser.Game(config);
 
 
-let keySPACE;
-var timerEvent;
 
+
+//CONSTANTS
+let keySPACE; //space key
+
+
+let Width = game.config.width;
+let Height = game.config.height;
 let centerX = game.config.width/2;
 let centerY = game.config.height/2;
+
+let playerStartPos = 150;
+
+let timerEvent;
+let gameSpeed = 1;
