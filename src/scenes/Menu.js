@@ -17,6 +17,7 @@ class Menu extends Phaser.Scene {
         this.load.atlas('Start', 'START.png', 'START.json')
         this.load.atlas('Instruction', 'Instruction.png', 'Instruction.json')
         this.load.atlas('Credits', 'Credits.png', 'Credits.json')
+        this.load.audio('Selection', 'Selection.wav');
         
     }
   
@@ -42,12 +43,8 @@ class Menu extends Phaser.Scene {
         let centerX = game.config.width/2;
         let centerY = game.config.height/2;
         let textSpacer = 64;
-  
-        //this.add.text(centerX, centerY- textSpacer, 'Gassed', menuConfig).setOrigin(0.5);
-        //this.add.text(centerX, centerY, ' (space key) to Jump', menuConfig).setOrigin(0.5);
         menuConfig.backgroundColor = '#00FF00';
         menuConfig.color = '#000';
-        //this.add.text(centerX, centerY + textSpacer, 'Press Space to start', menuConfig).setOrigin(0.5);
         
         this.add.sprite(centerX, centerY/2, 'GassedLogo');  //logo
 
@@ -66,18 +63,18 @@ class Menu extends Phaser.Scene {
             useHandCursor: true
         });
 
-        this.input.on('gameobjectdown', (pointer, gameObject, event) => {
+        this.input.on('gameobjectover', (pointer, gameObject, event) => {
             gameObject.setFrame(2);
-            //this.scene.start("playScene");  
         });
 
-        this.input.on('pointerover', (pointer, gameObject, event) => {
-            //hover over event
-        });
 
-        this.input.on('gameobjectup', (pointer, gameObject, event) => {
+        this.input.on('gameobjectout', (pointer, gameObject, event) => {
             gameObject.setFrame(1);
-            if(gameObject===this.startButton){
+        });
+
+        this.input.on('gameobjectdown', (pointer, gameObject, event) => {
+            this.sound.play('Selection', {volume:0.25});
+            if(gameObject===this.startLogo){
                 this.scene.start("playScene");  
             }else if(gameObject===this.instructionButton){
                 this.scene.start("InstructionScene");  
