@@ -140,8 +140,7 @@ class Play extends Phaser.Scene {
         this.burrito = this.physics.add.sprite(this.getRandomArbitrary(800, 1000), this.getRandomArbitrary(200, 400), 'Burrito');
         this.burrito.body.setSize(10, 10)
         this.burrito.body.setImmovable(true);
-
-<<<<<<< HEAD
+        
         //timer for the game score
         timerEvent = this.time.addEvent({
             delay: 600,                // ms
@@ -153,24 +152,6 @@ class Play extends Phaser.Scene {
         this.elapsed = timerEvent.getRepeatCount();
         this.time = 0;
 
-=======
-
-        //health bar
-        this.hp = new HealthBar(this, 20, 20);
-
-
-        //timer for the game score
-        timerEvent = this.time.addEvent({
-            delay: 600,                // ms
-            callback: this.printTime,
-            //args: [],
-            callbackScope: this,
-            loop: true
-        });
-        this.elapsed = timerEvent.getRepeatCount();
-        this.time = 0;
-
->>>>>>> 494220fb382f2c3670d3442e50ad2ba955a7cb82
         //score display
         this.text = this.add.text(690, 20);
     }
@@ -249,9 +230,7 @@ class Play extends Phaser.Scene {
         this.update_item(this.banana);
         this.physics.overlap(this.player1, this.burrito, this.increase, null, this)
         this.update_item(this.burrito);
-<<<<<<< HEAD
 
-        
         if (this.player1.x < -this.player1.width){
             this.player1.SetX(Width*2) //temporary** move player off screen
             gameSpeed = 0; //freeze game
@@ -270,24 +249,6 @@ class Play extends Phaser.Scene {
     }
 
 
-=======
-    }
-
-
-    fixwallphasing(wall){
-        //i get why its called PHASER now...
-        if (this.player1.x < wall.x + wall.width &&
-            this.player1.x + this.player1.width > wall.x &&
-            this.player1.y < wall.y + wall.height &&
-            this.player1.height + this.player1.y > wall.y){
-                this.player1.setX(wall.x-this.player1.width);
-            }
-    }
-
-
->>>>>>> 494220fb382f2c3670d3442e50ad2ba955a7cb82
-
-
     update_wall(wall){
         wall.setVelocityX(-gameSpeed*300);
 
@@ -295,15 +256,7 @@ class Play extends Phaser.Scene {
             wall.setX(this.getRandomArbitrary(centerX*2, centerX*5));
         }
     }
-<<<<<<< HEAD
 
-
-
-=======
-
-
-
->>>>>>> 494220fb382f2c3670d3442e50ad2ba955a7cb82
     update_item(item){
         item.setVelocityX(-gameSpeed*300);
         if (item.x < 0){
