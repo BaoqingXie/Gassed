@@ -6,7 +6,6 @@ class Play extends Phaser.Scene {
     preload() {
         this.load.path = './assets/';
 
-        this.load.image('floor', 'floor.png');
         this.load.atlas('player1', 'player1.png', 'player1.json');
         this.load.image('background', 'Background.png');
         this.load.image('floor', 'floor.png');
