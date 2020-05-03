@@ -24,6 +24,7 @@ class Play extends Phaser.Scene {
     create() {
         // place background tile sprite
         this.background = this.add.tileSprite(0, 0, 640, 480, 'background').setScale(1.25, 1.25).setOrigin(0, 0);
+        
       
         //creating anims using the atlas
         this.anims.create({
@@ -96,6 +97,7 @@ class Play extends Phaser.Scene {
         this.floor.displayWidth = Width * 1.2;
         this.floor.displayHeight = Height * 0.1
         this.floor.setImmovable();
+        this.floortile = this.add.tileSprite(0, Height-35, Width, 35, 'floor').setScale(1.1,1.1).setOrigin(0,0);
         
         //ceiling
         this.ceiling = this.physics.add.sprite(centerX, -30, 'floor');
@@ -129,7 +131,7 @@ class Play extends Phaser.Scene {
         this.isFarting = false; // added to clean up animation
 
         //health bar
-        this.hp = new HealthBar(this, 50, 20);
+        this.gas = new GasBar(this, 50, 20);
         this.add.image(30,25,'fart').setScale(0.6,0.6);
 
         //add items
@@ -170,8 +172,9 @@ class Play extends Phaser.Scene {
         if (gameSpeed<=2)
             gameSpeed *= 1.0001
 
-        //Background scrolling
-        this.background.tilePositionX += gameSpeed*2.5;
+        //scrolling
+        this.background.tilePositionX += gameSpeed/1.5;
+        this.floortile.tilePositionX += gameSpeed*1.2;
 
         //handle grounded state
         if (this.player1.y + this.player1.height >= this.floor.y - 1 && this.grounded == false) {
@@ -183,7 +186,7 @@ class Play extends Phaser.Scene {
             this.grounded = false;
 
         //jump
-        if (Phaser.Input.Keyboard.JustDown(keySPACE) && this.grounded && this.hp.value > 0) {
+        if (Phaser.Input.Keyboard.JustDown(keySPACE) && this.grounded) {
             this.justJumped = true;
             this.sound.play('fart_J', {volume:0.25});
             this.player1.anims.stop();
@@ -195,13 +198,13 @@ class Play extends Phaser.Scene {
         }
 
         //fart
-        if (keySPACE.isDown && !this.grounded && !this.justJumped && this.hp.value > 0) {
+        if (keySPACE.isDown && !this.grounded && !this.justJumped && this.gas.value > 0) {
             if (!this.isFarting) {
                 this.player1.play('loop-fart');
                 this.isFarting = true;
                 this.sound.play('fart_F', {volume:0.25});
             }
-            this.hp.decrease(fartConsumption);
+            this.gas.decrease(fartConsumption);
             this.player1.setAccelerationY(-fartStrength);
         }
         else {
@@ -214,7 +217,7 @@ class Play extends Phaser.Scene {
 
         //player rubber band
         if (this.player1.x < playerStartPos)
-            this.player1.setVelocityX(10);
+            this.player1.setVelocityX(12);
         else{
             this.player1.setAccelerationX(0);
             this.player1.setVelocityX(0);
@@ -292,8 +295,10 @@ class Play extends Phaser.Scene {
 
 
     printTime() {
-        this.text.setText('Score: ' + this.time + 'm');
-        this.time += 1;
+        if (gameSpeed > 0){
+            this.text.setText('Score: ' + this.time + 'm');
+            this.time += 1;
+        }
     }
 
     getRandomArbitrary(min, max) {
