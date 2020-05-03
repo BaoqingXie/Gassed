@@ -20,6 +20,7 @@ class Play extends Phaser.Scene {
     create() {
         // place background tile sprite
         this.background = this.add.tileSprite(0, 0, 640, 480, 'background').setScale(1.25, 1.25).setOrigin(0, 0);
+        
       
         //creating anims using the atlas
         this.anims.create({
@@ -96,6 +97,7 @@ class Play extends Phaser.Scene {
         this.floor.displayWidth = Width * 1.2;
         this.floor.displayHeight = Height * 0.1
         this.floor.setImmovable();
+        this.floortile = this.add.tileSprite(0, Height-35, Width, 35, 'floor').setScale(1.1,1.1).setOrigin(0,0);
         
         //ceiling
         this.ceiling = this.physics.add.sprite(centerX, -30, 'floor');
@@ -168,8 +170,9 @@ class Play extends Phaser.Scene {
         if (gameSpeed<=2)
             gameSpeed *= 1.0001
 
-        //Background scrolling
-        this.background.tilePositionX += gameSpeed*2.5;
+        //scrolling
+        this.background.tilePositionX += gameSpeed/1.5;
+        this.floortile.tilePositionX += gameSpeed*1.2;
 
         //handle grounded state
         if (this.player1.y + this.player1.height >= this.floor.y - 1 && this.grounded == false) {
