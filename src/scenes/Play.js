@@ -196,7 +196,7 @@ class Play extends Phaser.Scene {
                 this.player1.play('loop-fart');
                 this.isFarting = true;
             }
-            this.hp.decrease(fartConsumption);
+            this.gas.decrease(fartConsumption);
             this.player1.setAccelerationY(-fartStrength);
         }
         else {

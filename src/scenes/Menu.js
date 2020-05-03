@@ -77,9 +77,9 @@ class Menu extends Phaser.Scene {
 
         this.input.on('gameobjectup', (pointer, gameObject, event) => {
             gameObject.setFrame(1);
-            if(gameObject===this.startLogo){
+            if(gameObject===this.startButton){
                 this.scene.start("playScene");  
-            }else if(gameObject===this.Instruction){
+            }else if(gameObject===this.instructionButton){
                 this.scene.start("InstructionScene");  
             }else{
                 this.scene.start("CreditsScene"); 
