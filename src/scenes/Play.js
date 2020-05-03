@@ -193,7 +193,7 @@ class Play extends Phaser.Scene {
             this.player1.setFrame('fart09');
             this.player1.setVelocity(0, -jumpHeight);
             this.grounded = false;
-            this.hp.decrease(5);
+            this.gas.decrease(5);
             setTimeout(() => { this.justJumped = false; }, 300);  //fart delay
         }
 
@@ -280,14 +280,14 @@ class Play extends Phaser.Scene {
     increase() {
         this.burrito.destroy();
         this.sound.play('Eat', {volume:0.25});
-        this.hp.increase(50);
+        this.gas.increase(50);
         this.burrito = this.physics.add.sprite(this.getRandomArbitrary(centerX*3, centerX*6), this.getRandomArbitrary(centerY*0.5, centerY*1.7), 'Burrito');
     }
 
     decrease() {
         this.banana.destroy();
         this.sound.play('Eat', {volume:0.25});
-        this.hp.decrease(30);
+        this.gas.decrease(30);
         this.banana = this.physics.add.sprite(this.getRandomArbitrary(centerX*3, centerX*6), this.getRandomArbitrary(centerY*0.5, centerY*1.7), 'Banana');
     }
 
