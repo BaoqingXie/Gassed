@@ -6,6 +6,18 @@ Date completed: TBD
 
 Creative Tilt Justification:
 
+(technical)
+Especially after the lecture where I learned that when 2 objects push hard enough, they will
+fairly easily phase through each other, I was mainly concerned with walls consistently
+pushing the player back without phasing. The running animation of the player causes the
+collision box to shift around, and when it shifts forward it phases through walls.
+I ended up implementing AABB collision mixed in with the built in arcade physics collision.
+So if the player is inside the wall, then they are simply pushed out to the front. Thankfully
+the player will only ever phase from one side of the wall, so it was as simple as setting the
+player x value to the front of the wall.
+
+(audio/visual)
+
 
 
 */
