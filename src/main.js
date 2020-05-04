@@ -1,3 +1,17 @@
+
+/*
+Contributors: Alec Zhang, BaoQing Xie, Brad Kim, and JunYao Li
+Game Title: Gassed
+Date completed: TBD
+
+Creative Tilt Justification:
+
+
+
+*/
+
+
+
 let config = {
     type: Phaser.CANVAS,
     width: 800,
