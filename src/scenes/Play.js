@@ -113,8 +113,8 @@ class Play extends Phaser.Scene {
 
         //add walls
         this.wall1 = this.physics.add.sprite(Width * 2, this.getRandomArbitrary(0, Height), 'wall');
-        this.wall2 = this.physics.add.sprite(this.getRandomArbitrary(Width * 3, Width * 5), this.getRandomArbitrary(0, Height), 'wall');
-        this.wall3 = this.physics.add.sprite(this.getRandomArbitrary(Width * 100, Width * 103), this.getRandomArbitrary(0, Height), 'wall');
+        this.wall2 = this.physics.add.sprite(this.getRandomArbitrary(Width * 5, Width * 6), this.getRandomArbitrary(0, Height), 'wall');
+        this.wall3 = this.physics.add.sprite(this.getRandomArbitrary(Width * 100, Width * 101), this.getRandomArbitrary(0, Height), 'wall');
         this.wall1.setImmovable(true);
         this.wall2.setImmovable(true);
         this.wall3.setImmovable(true);
@@ -141,15 +141,15 @@ class Play extends Phaser.Scene {
         this.add.image(30, 25, 'fart').setScale(0.6, 0.6);
 
         //add items
-        this.banana = this.physics.add.sprite(this.getRandomArbitrary(800, 1000), this.getRandomArbitrary(200, 100), 'Banana');
+        this.banana = this.physics.add.sprite(this.getRandomArbitrary(Width, Width*3), this.getRandomArbitrary(200, 100), 'Banana');
         this.banana.body.setSize(10, 10)
         this.banana.body.setImmovable(true);
 
-        this.burrito = this.physics.add.sprite(this.getRandomArbitrary(800, 1000), this.getRandomArbitrary(200, 400), 'Burrito');
+        this.burrito = this.physics.add.sprite(this.getRandomArbitrary(Width, Width*3), this.getRandomArbitrary(200, 400), 'Burrito');
         this.burrito.body.setSize(10, 10)
         this.burrito.body.setImmovable(true);
 
-        this.icecream = this.physics.add.sprite(this.getRandomArbitrary(800, 1000), this.getRandomArbitrary(200, 400), 'Icecream');
+        this.icecream = this.physics.add.sprite(this.getRandomArbitrary(Width*10, Width*11), this.getRandomArbitrary(200, 400), 'Icecream');
         this.icecream.body.setSize(10, 10)
         this.icecream.body.setImmovable(true);
 
@@ -161,7 +161,6 @@ class Play extends Phaser.Scene {
             callbackScope: this,
             loop: true
         });
-
         this.timescores = 0;
 
         //score display
@@ -335,7 +334,7 @@ class Play extends Phaser.Scene {
     update_item(item) {
         item.setVelocityX(-gameSpeed * 300);
         if (item.x < 0) {
-            item.setX(this.getRandomArbitrary(centerX * 3, centerX * 6));
+            item.setX(this.getRandomArbitrary(centerX * 3, centerX * 7));
             item.setY(this.getRandomArbitrary(centerY * 0.5, centerY * 1.7));
         }
 
