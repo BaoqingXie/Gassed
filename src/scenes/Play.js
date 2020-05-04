@@ -231,7 +231,7 @@ class Play extends Phaser.Scene {
         //jump
         if (Phaser.Input.Keyboard.JustDown(keySPACE) && this.grounded && this.playerdeath == 0) {
             this.justJumped = true;
-            this.sound.play('fart_J', { volume: 0.25 });
+            this.sound.play('fart_J', { volume: 0.18 });
             this.player1.anims.stop();
             this.player1.setFrame('fart09');
             this.player1.setVelocity(0, -jumpHeight);
@@ -245,7 +245,7 @@ class Play extends Phaser.Scene {
             if (!this.isFarting) {
                 this.player1.play('loop-fart');
                 this.isFarting = true;
-                this.sound.play('fart_F', { volume: 0.25 });
+                this.sound.play('fart_F', { volume: 0.2 });
             }
             this.gas.decrease(fartConsumption);
             this.player1.setAccelerationY(-fartStrength);
@@ -358,7 +358,7 @@ class Play extends Phaser.Scene {
 
     death() {
         this.icecream.destroy();
-        this.sound.play('fart_D', { volume: 0.25 });
+        this.sound.play('fart_D', { volume: 0.18 });
         this.player1.play('death');
         this.icecream = this.physics.add.sprite(this.getRandomArbitrary(centerX * 3, centerX * 6), this.getRandomArbitrary(centerY * 0.5, centerY * 1.7), 'Banana');
         this.playerdeath = 1;
