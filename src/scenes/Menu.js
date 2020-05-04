@@ -17,13 +17,15 @@ class Menu extends Phaser.Scene {
         this.load.atlas('Start', 'START.png', 'START.json')
         this.load.atlas('Instruction', 'Instruction.png', 'Instruction.json')
         this.load.atlas('Credits', 'Credits.png', 'Credits.json')
-        
+        this.load.audio('Selection', 'Selection.wav');
+        this.load.audio('bgm', 'gassed-bgm.wav');
+        this.load.audio('bgm-2', 'gassed-bgm-2.wav');
     }
   
     create() {
       //menu background
       this.background = this.add.tileSprite(0, 0, 640, 480, 'background').setScale(1.25, 1.25).setOrigin(0, 0);
-  
+        
         // menu display
         let menuConfig = {
             fontFamily: 'Courier',
@@ -42,40 +44,42 @@ class Menu extends Phaser.Scene {
         let centerX = game.config.width/2;
         let centerY = game.config.height/2;
         let textSpacer = 64;
-  
-        //this.add.text(centerX, centerY- textSpacer, 'Gassed', menuConfig).setOrigin(0.5);
-        //this.add.text(centerX, centerY, ' (space key) to Jump', menuConfig).setOrigin(0.5);
         menuConfig.backgroundColor = '#00FF00';
         menuConfig.color = '#000';
-        //this.add.text(centerX, centerY + textSpacer, 'Press Space to start', menuConfig).setOrigin(0.5);
         
-        //logo
-        this.add.sprite(centerX, centerY-200, 'GassedLogo');
-        this.startLogo = this.add.sprite(centerX, centerY-50, 'Start', 1).setScale(0.7,0.7);
-        this.startLogo.setInteractive({
+        this.add.sprite(centerX, centerY/2, 'GassedLogo');  //logo
+
+        this.startButton = this.add.sprite(centerX, centerY, 'Start', 1).setScale(0.75,0.75);
+        this.startButton.setInteractive({
             useHandCursor: true
         });
 
-        this.Instruction = this.add.sprite(centerX, centerY+10, 'Instruction', 1).setScale(0.55,0.55);
-        this.Instruction.setInteractive({
+        this.instructionButton = this.add.sprite(centerX, centerY+60, 'Instruction', 1).setScale(0.55,0.55);
+        this.instructionButton.setInteractive({
             useHandCursor: true
         });
 
-        this.Credits = this.add.sprite(centerX, centerY+70, 'Credits', 1).setScale(0.6,0.6);
-        this.Credits.setInteractive({
+        this.creditsButton = this.add.sprite(centerX, centerY+120, 'Credits', 1).setScale(0.5,0.5);
+        this.creditsButton.setInteractive({
             useHandCursor: true
+        });
+
+        this.input.on('gameobjectover', (pointer, gameObject, event) => {
+            gameObject.setFrame(2);
+        });
+
+
+        this.input.on('gameobjectout', (pointer, gameObject, event) => {
+            gameObject.setFrame(1);
         });
 
         this.input.on('gameobjectdown', (pointer, gameObject, event) => {
-            gameObject.setFrame(2);
-            //this.scene.start("playScene");  
-        });
-
-        this.input.on('gameobjectup', (pointer, gameObject, event) => {
-            gameObject.setFrame(1);
-            if(gameObject===this.startLogo){
-                this.scene.start("playScene");  
-            }else if(gameObject===this.Instruction){
+            this.sound.play('Selection', {volume:0.25});
+            if(gameObject===this.startButton){
+                this.scene.start("playScene");
+                this.menubgm.stop();  
+                this.BGMisPlaying = false;
+            }else if(gameObject===this.instructionButton){
                 this.scene.start("InstructionScene");  
             }else{
                 this.scene.start("CreditsScene"); 
@@ -84,7 +88,15 @@ class Menu extends Phaser.Scene {
                  
         // define keys
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-    
+
+        // bgm
+        if(!this.BGMisPlaying){
+            this.menubgm = this.sound.add('bgm');
+            this.menubgm.loop = true;
+            this.menubgm.volume = 0.7;
+            this.menubgm.play();
+            this.BGMisPlaying = true;
+        }
     }
   
   
