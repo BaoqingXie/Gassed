@@ -12,6 +12,7 @@ class Play extends Phaser.Scene {
         this.load.image('fuelbar', 'fuelbar.png');
         this.load.image('Burrito', 'Burrito.png');
         this.load.image('Banana', 'Banana.png');
+        this.load.image('Icecream', 'icecream.png');
         this.load.image('fart', 'fart.png');
         this.load.image('wall', 'obstacle1.png');
         this.load.audio('fart_J', 'Fart_J.wav');
@@ -142,6 +143,10 @@ class Play extends Phaser.Scene {
         this.burrito = this.physics.add.sprite(this.getRandomArbitrary(800, 1000), this.getRandomArbitrary(200, 400), 'Burrito');
         this.burrito.body.setSize(10, 10)
         this.burrito.body.setImmovable(true);
+
+        this.icecream= this.physics.add.sprite(this.getRandomArbitrary(800, 1000), this.getRandomArbitrary(200, 400), 'Icecream');
+        this.icecream.body.setSize(10, 10)
+        this.icecream.body.setImmovable(true);
         
         //timer for the game score
         timerEvent = this.time.addEvent({
@@ -163,6 +168,9 @@ class Play extends Phaser.Scene {
             fixedWidth: 0,
         }
         this.text = this.add.text(670, 20, [] , smallConfig);
+
+        //ice cream condition
+        this.playerdeath = 0 ;
     }
     
 
@@ -177,7 +185,7 @@ class Play extends Phaser.Scene {
         this.floortile.tilePositionX += gameSpeed*1.2;
 
         //handle grounded state
-        if (this.player1.y + this.player1.height >= this.floor.y - 1 && this.grounded == false) {
+        if (this.player1.y + this.player1.height >= this.floor.y - 1 && this.grounded == false &&this.playerdeath==0) {
             this.grounded = true;
             if (!this.justJumped)
                 this.player1.play('run'); // when grounded/not jumping, play run animation
@@ -186,7 +194,7 @@ class Play extends Phaser.Scene {
             this.grounded = false;
 
         //jump
-        if (Phaser.Input.Keyboard.JustDown(keySPACE) && this.grounded) {
+        if (Phaser.Input.Keyboard.JustDown(keySPACE) && this.grounded&&this.playerdeath==0) {
             this.justJumped = true;
             this.sound.play('fart_J', {volume:0.25});
             this.player1.anims.stop();
@@ -198,7 +206,7 @@ class Play extends Phaser.Scene {
         }
 
         //fart
-        if (keySPACE.isDown && !this.grounded && !this.justJumped && this.gas.value > 0) {
+        if (keySPACE.isDown && !this.grounded && !this.justJumped && this.gas.value > 0&&this.playerdeath==0) {
             if (!this.isFarting) {
                 this.player1.play('loop-fart');
                 this.isFarting = true;
@@ -207,7 +215,7 @@ class Play extends Phaser.Scene {
             this.gas.decrease(fartConsumption);
             this.player1.setAccelerationY(-fartStrength);
         }
-        else {
+        else if(this.playerdeath==0){
             this.player1.setAcceleration(0, 0);
             if (this.isFarting && !this.grounded) {
                 this.player1.play('falling');
@@ -216,7 +224,7 @@ class Play extends Phaser.Scene {
         }
 
         //player rubber band
-        if (this.player1.x < playerStartPos)
+        if (this.player1.x < playerStartPos && this.playerdeath ==0)
             this.player1.setVelocityX(12);
         else{
             this.player1.setAccelerationX(0);
@@ -238,11 +246,14 @@ class Play extends Phaser.Scene {
         this.update_item(this.banana);
         this.physics.overlap(this.player1, this.burrito, this.increase, null, this)
         this.update_item(this.burrito);
+        this.physics.overlap(this.player1, this.icecream, this.death, null, this)
+        this.update_item(this.icecream);
 
         //fail state check
-        if (this.player1.x < -this.player1.width/2){
+        if (this.player1.x < -this.player1.width/2 || this.playerdeath == 1){
             //game over
-            this.player1.setX(Width*2); //temporary. get the player off screen
+            this.playerdeath = 1;
+            //this.player1.setX(Width*2); //temporary. get the player off screen
             gameSpeed = 0; //freeze game
         }
     }
@@ -291,9 +302,17 @@ class Play extends Phaser.Scene {
         this.banana = this.physics.add.sprite(this.getRandomArbitrary(centerX*3, centerX*6), this.getRandomArbitrary(centerY*0.5, centerY*1.7), 'Banana');
     }
 
+    death(){
+        this.playerdeath = 1;
+        this.icecream.destroy();
+        this.sound.play('fart_D', {volume:0.25});
+        this.player1.play('death');
+        this.icecream = this.physics.add.sprite(this.getRandomArbitrary(centerX*3, centerX*6), this.getRandomArbitrary(centerY*0.5, centerY*1.7), 'Banana');
+    }
 
 
 
+    
     printTime() {
         if (gameSpeed > 0){
             this.text.setText('Score: ' + this.time + 'm');
