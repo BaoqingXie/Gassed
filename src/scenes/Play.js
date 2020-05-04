@@ -24,7 +24,6 @@ class Play extends Phaser.Scene {
         this.load.audio('Selection', 'Selection.wav');
         this.load.audio('Eat', 'Eat.wav');
         this.load.audio('game-over', 'game-over.wav');
-
     }
 
 
