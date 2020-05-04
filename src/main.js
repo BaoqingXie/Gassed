@@ -1,12 +1,15 @@
 
 /*
+------------------------------------------------------------------------
+Team: The Cooler Team
 Contributors: Alec Zhang, BaoQing Xie, Brad Kim, and JunYao Li
 Game Title: Gassed
 Date completed: TBD
+------------------------------------------------------------------------
 
 Creative Tilt Justification:
 
-(technical)
+(technical):
 Especially after the lecture where I learned that when 2 objects push hard enough, they will
 fairly easily phase through each other, I was mainly concerned with walls consistently
 pushing the player back without phasing. The running animation of the player causes the
@@ -16,13 +19,23 @@ So if the player is inside the wall, then they are simply pushed out to the fron
 the player will only ever phase from one side of the wall, so it was as simple as setting the
 player x value to the front of the wall.
 
-(audio/visual)
+------------------------------------------------------------------------
+(audio/visual):
+1.For the floor drawing, I first draw 32X32 pieces and copy paste the rest of them, then do the polish……..
+2.Instead of only using Aseprite, I combine it with Photoshop to do the work.
+3.This is also my first time drawing a pixel, I leant how to use dark colour to show the shadow.
+4.Also, I get many ideas from other pixel drawing online.
+5.Our assets/animations as well as the background music are all original works.
 
+------------------------------------------------------------------------
+credits:
+logo: Textcraft.com
+gasbar.js: https://phaser.io/examples
+SoundEffects: https://freesound.org
+IdeasaboutItemsAssets: https://opengameart.org/
 
-
+------------------------------------------------------------------------
 */
-
-
 
 let config = {
     type: Phaser.CANVAS,
@@ -45,12 +58,8 @@ let config = {
 
 let game = new Phaser.Game(config);
 
-
-
-
 //CONSTANTS
 let keySPACE; //space key
-
 
 let Width = game.config.width;
 let Height = game.config.height;
@@ -58,8 +67,6 @@ let centerX = game.config.width/2;
 let centerY = game.config.height/2;
 
 let playerStartPos = 150;
-
-
 
 let gameSpeed = 1;
 let gravity = 800;
