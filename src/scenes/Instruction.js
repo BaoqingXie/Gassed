@@ -14,6 +14,8 @@ class Instruction extends Phaser.Scene {
         this.load.image('fart', 'fart.png');
         this.load.atlas('Back', 'Back.png', 'Back.json');
         this.load.atlas('player1', 'player1.png', 'player1.json');
+        this.load.audio('Selection', 'Selection.wav');
+        this.load.image('Icecream', 'icecream.png');
 
     }
 
@@ -45,13 +47,16 @@ class Instruction extends Phaser.Scene {
 
         this.add.text(centerX + textSpacer, centerY - 3 * textSpacer, 'Items:', titleConfig).setOrigin(0, 0);
         this.add.text(centerX + textSpacer, centerY - 2 * textSpacer, 'Collect burritos to keep gas', smallConfig).setOrigin(0, 0);
-        this.add.text(centerX + textSpacer, centerY - 1 * textSpacer, 'Avoid bananas which release gas', smallConfig).setOrigin(0, 0);
-        this.add.image(centerX + 0.4*textSpacer, centerY - 1 * textSpacer,'Banana').setOrigin(0, 0);
+        this.add.text(centerX + textSpacer, centerY - 1.5 * textSpacer, 'Avoid bananas which release gas', smallConfig).setOrigin(0, 0);
+        this.add.text(centerX + textSpacer, centerY - 1 * textSpacer, 'Avoid icecreams cause diarrhea', smallConfig).setOrigin(0, 0);
+        this.add.image(centerX + 0.4*textSpacer, centerY - 1.5 * textSpacer,'Banana').setOrigin(0, 0);
         this.add.image(centerX + 0.4*textSpacer, centerY - 2 * textSpacer,'Burrito').setOrigin(0, 0);
+        this.add.image(centerX + 0.4*textSpacer, centerY- 1 * textSpacer,'Icecream').setOrigin(0, 0);
 
         this.add.text(centerX - textSpacer, centerY + 0.5 * textSpacer, 'How to play:', titleConfig).setOrigin(0, 0);
         this.add.text(centerX - 4 * textSpacer, centerY + 1.5 * textSpacer, '1. Use your gas to jump and fart in order to avoid obstacle', smallConfig).setOrigin(0, 0);
         this.add.text(centerX - 4 * textSpacer, centerY + 2.5 * textSpacer, '2. Collect right items to keep going forward', smallConfig).setOrigin(0, 0);
+        this.add.text(centerX - 4 * textSpacer, centerY + 3.5 * textSpacer, '3. If you are out of game screen, game is over.', smallConfig).setOrigin(0, 0);
         this.add.image(centerX - 5*textSpacer, centerY + 2.2 * textSpacer,'fart');
 
         this.Back = this.add.sprite(100, 50, 'Back', 1).setScale(0.5, 0.5);
@@ -59,12 +64,16 @@ class Instruction extends Phaser.Scene {
             useHandCursor: true
         });
 
-        this.input.on('gameobjectdown', (pointer, gameObject, event) => {
+        this.input.on('gameobjectover', (pointer, gameObject, event) => {
             gameObject.setFrame(2);
         });
 
-        this.input.on('gameobjectup', (pointer, gameObject, event) => {
+        this.input.on('gameobjectout', (pointer, gameObject, event) => {
             gameObject.setFrame(1);
+        });
+
+        this.input.on('gameobjectdown', (pointer, gameObject, event) => {
+            this.sound.play('Selection', {volume:0.25});
             this.scene.start("menuScene");
         });
 

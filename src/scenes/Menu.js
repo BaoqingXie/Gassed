@@ -17,13 +17,15 @@ class Menu extends Phaser.Scene {
         this.load.atlas('Start', 'START.png', 'START.json')
         this.load.atlas('Instruction', 'Instruction.png', 'Instruction.json')
         this.load.atlas('Credits', 'Credits.png', 'Credits.json')
-        
+        this.load.audio('Selection', 'Selection.wav');
+        this.load.audio('bgm', 'gassed-bgm.wav');
+        this.load.audio('bgm-2', 'gassed-bgm-2.wav');
     }
   
     create() {
       //menu background
       this.background = this.add.tileSprite(0, 0, 640, 480, 'background').setScale(1.25, 1.25).setOrigin(0, 0);
-  
+        
         // menu display
         let menuConfig = {
             fontFamily: 'Courier',
@@ -42,12 +44,8 @@ class Menu extends Phaser.Scene {
         let centerX = game.config.width/2;
         let centerY = game.config.height/2;
         let textSpacer = 64;
-  
-        //this.add.text(centerX, centerY- textSpacer, 'Gassed', menuConfig).setOrigin(0.5);
-        //this.add.text(centerX, centerY, ' (space key) to Jump', menuConfig).setOrigin(0.5);
         menuConfig.backgroundColor = '#00FF00';
         menuConfig.color = '#000';
-        //this.add.text(centerX, centerY + textSpacer, 'Press Space to start', menuConfig).setOrigin(0.5);
         
         this.add.sprite(centerX, centerY/2, 'GassedLogo');  //logo
 
@@ -66,19 +64,21 @@ class Menu extends Phaser.Scene {
             useHandCursor: true
         });
 
-        this.input.on('gameobjectdown', (pointer, gameObject, event) => {
+        this.input.on('gameobjectover', (pointer, gameObject, event) => {
             gameObject.setFrame(2);
-            //this.scene.start("playScene");  
         });
 
-        this.input.on('pointerover', (pointer, gameObject, event) => {
-            //hover over event
-        });
 
-        this.input.on('gameobjectup', (pointer, gameObject, event) => {
+        this.input.on('gameobjectout', (pointer, gameObject, event) => {
             gameObject.setFrame(1);
+        });
+
+        this.input.on('gameobjectdown', (pointer, gameObject, event) => {
+            this.sound.play('Selection', {volume:0.25});
             if(gameObject===this.startButton){
-                this.scene.start("playScene");  
+                this.scene.start("playScene");
+                this.menubgm.stop();  
+                this.BGMisPlaying = false;
             }else if(gameObject===this.instructionButton){
                 this.scene.start("InstructionScene");  
             }else{
@@ -88,7 +88,15 @@ class Menu extends Phaser.Scene {
                  
         // define keys
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-    
+
+        // bgm
+        if(!this.BGMisPlaying){
+            this.menubgm = this.sound.add('bgm');
+            this.menubgm.loop = true;
+            this.menubgm.volume = 0.7;
+            this.menubgm.play();
+            this.BGMisPlaying = true;
+        }
     }
   
   
