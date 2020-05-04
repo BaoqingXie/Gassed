@@ -31,6 +31,8 @@ player x value to the front of the wall.
 credits:
 logo: Textcraft.com
 gasbar.js: https://phaser.io/examples
+SoundEffects: https://freesound.org
+IdeasaboutItemsAssets: https://opengameart.org/
 
 ------------------------------------------------------------------------
 */
