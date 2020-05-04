@@ -18,6 +18,7 @@ class Play extends Phaser.Scene {
         this.load.audio('fart_F', 'Fart_F.wav');
         this.load.audio('fart_D', 'Fart_D.wav');
         this.load.audio('Eat', 'Eat.wav');
+        this.load.audio('game-over', 'game-over.wav');
     }
 
 
@@ -163,6 +164,12 @@ class Play extends Phaser.Scene {
             fixedWidth: 0,
         }
         this.text = this.add.text(670, 20, [] , smallConfig);
+
+        // bgm
+        this.playbgm = this.sound.add('bgm-2');
+        this.playbgm.loop = true;
+        this.playbgm.volume = 0.6;
+        this.playbgm.play();
     }
     
 
@@ -170,8 +177,8 @@ class Play extends Phaser.Scene {
     update() {
         //faster game speed over time
         if (gameSpeed<=2)
-            gameSpeed *= 1.0001
-
+            gameSpeed *= 1.0001;
+        
         //scrolling
         this.background.tilePositionX += gameSpeed/1.5;
         this.floortile.tilePositionX += gameSpeed*1.2;
@@ -244,6 +251,8 @@ class Play extends Phaser.Scene {
             //game over
             this.player1.setX(Width*2); //temporary. get the player off screen
             gameSpeed = 0; //freeze game
+            this.playbgm.stop(); // stop music
+            this.sound.play('game-over');
         }
     }
 
