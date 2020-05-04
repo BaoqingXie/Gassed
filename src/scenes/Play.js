@@ -18,6 +18,7 @@ class Play extends Phaser.Scene {
         this.load.audio('fart_F', 'Fart_F.wav');
         this.load.audio('fart_D', 'Fart_D.wav');
         this.load.audio('Eat', 'Eat.wav');
+        this.load.audio('game-over', 'game-over.wav');
     }
 
 
@@ -251,7 +252,7 @@ class Play extends Phaser.Scene {
             this.player1.setX(Width*2); //temporary. get the player off screen
             gameSpeed = 0; //freeze game
             this.playbgm.stop(); // stop music
- 
+            this.sound.play('game-over');
         }
     }
 
