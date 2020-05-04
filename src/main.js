@@ -40,3 +40,5 @@ let gravity = 800;
 let jumpHeight = 500;
 let fartStrength = 1500;
 let fartConsumption = 0.2;
+
+this.BGMisPlaying = false;
