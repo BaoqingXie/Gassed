@@ -4,7 +4,7 @@
 Team: The Cooler Team
 Contributors: Alec Zhang, BaoQing Xie, Brad Kim, and JunYao Li
 Game Title: Gassed
-Date completed: TBD
+Date completed: 2020/5/3
 ------------------------------------------------------------------------
 
 Creative Tilt Justification:
