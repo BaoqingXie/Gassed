@@ -18,13 +18,14 @@ class Menu extends Phaser.Scene {
         this.load.atlas('Instruction', 'Instruction.png', 'Instruction.json')
         this.load.atlas('Credits', 'Credits.png', 'Credits.json')
         this.load.audio('Selection', 'Selection.wav');
-        
+        this.load.audio('bgm', 'gassed-bgm.wav');
+        this.load.audio('bgm-2', 'gassed-bgm-2.wav');
     }
   
     create() {
       //menu background
       this.background = this.add.tileSprite(0, 0, 640, 480, 'background').setScale(1.25, 1.25).setOrigin(0, 0);
-  
+        
         // menu display
         let menuConfig = {
             fontFamily: 'Courier',
@@ -75,7 +76,9 @@ class Menu extends Phaser.Scene {
         this.input.on('gameobjectdown', (pointer, gameObject, event) => {
             this.sound.play('Selection', {volume:0.25});
             if(gameObject===this.startButton){
-                this.scene.start("playScene");  
+                this.scene.start("playScene");
+                this.menubgm.stop();  
+                this.BGMisPlaying = false;
             }else if(gameObject===this.instructionButton){
                 this.scene.start("InstructionScene");  
             }else{
@@ -85,7 +88,15 @@ class Menu extends Phaser.Scene {
                  
         // define keys
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-    
+
+        // bgm
+        if(!this.BGMisPlaying){
+            this.menubgm = this.sound.add('bgm');
+            this.menubgm.loop = true;
+            this.menubgm.volume = 0.7;
+            this.menubgm.play();
+            this.BGMisPlaying = true;
+        }
     }
   
   
